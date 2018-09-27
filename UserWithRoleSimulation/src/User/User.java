@@ -2,6 +2,9 @@ package User;
 
 import java.util.List;
 
+import com.sun.org.apache.regexp.internal.recompile;
+
+import FeedBack.FeedBack;
 import Service.Service;
 import ServiceResponsitory.ServiceResponsitory;
 import repast.simphony.context.Context;
@@ -47,9 +50,9 @@ public abstract class User {
 			if (!network.isAdjacent(this, s))
 			{
 				network.addEdge(this,s);
-				int score = this.giveScore();
+				FeedBack feedBack = this.giveFeedBack();
 				System.out.println(s);
-				s.setScore(score);
+				s.setFeedBack(feedBack);
 			}
 		}
 	}
@@ -58,6 +61,14 @@ public abstract class User {
 	public void deleteLinkWithService()
 	{
 		network.removeEdges();
+	}
+	
+	public FeedBack giveFeedBack() {
+		FeedBack feedBack = new FeedBack();
+		feedBack.setScore(giveScore());
+		feedBack.setUserid(this.id);
+		
+		return feedBack;
 	}
 	
 }

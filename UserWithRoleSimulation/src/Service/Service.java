@@ -1,6 +1,14 @@
 package Service;
 
+import java.util.HashSet;
 
+import javax.media.j3d.Sound;
+
+import org.antlr.runtime.tree.DoubleLinkTree;
+
+import FeedBack.FeedBack;
+import User.SilenceUser;
+import simphony.util.Main;
 
 public class Service {
 	private static long counter = 0;
@@ -9,6 +17,7 @@ public class Service {
 	int feedbacknum = 0;
 	//沉默的人数
 	int  silencenum = 0;
+	HashSet<Long> SilenceUser = new HashSet<>();
 	
 	@Override
 	public String toString()
@@ -18,7 +27,9 @@ public class Service {
 	
 	
 	
-	public void  setScore(int sc) {
+	public void  setFeedBack(FeedBack feedBack) {
+		int sc = feedBack.getScore();
+		long userid = feedBack.getUserid();
 		feedbacknum++;
 		if(sc != 0)
 		{
@@ -26,14 +37,15 @@ public class Service {
 		}
 		else
 		{
-			silencenum++;
-			if (silencenum % 100 == 0) {
+			silencenum = SilenceUser.size() ;
+			if ((silencenum + 1) % 100 == 0 && !SilenceUser.contains(userid) ){
 				double zf = getIncreaseReputation(silencenum);
 				score += zf;
 			}
 			
-			
+			SilenceUser.add(userid);
 		}
+		
 	}
 	
 	public double getScore() {
@@ -42,8 +54,10 @@ public class Service {
 	
 	double getIncreaseReputation(int num)
 	{
-		double res = 1 -  Math.exp(-num / 100);
-		System.out.println("res的值" + res);
+		double tem = Math.exp((-1.0 * num) / 1000);
+		double res = 1.0 -  tem;
 		return res;
 	}
+	
+	
 }
